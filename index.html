@@ -1,73 +1,2278 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LogiControl V8 Mobile</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fb;color:#172033}header{height:64px;background:#0b4fd8;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px}.brand{font-weight:800;font-size:20px}
-button,input,select,textarea{font:inherit;padding:10px;border:1px solid #d0d5dd;border-radius:8px}button{cursor:pointer}.primary{background:#0b4fd8;color:#fff;border:0}.danger{background:#b42318;color:#fff;border:0}
-#login{min-height:100vh;display:grid;place-items:center}.login{width:min(430px,92%);background:#fff;padding:28px;border-radius:18px;box-shadow:0 8px 35px #0001}.login input{width:100%;margin:6px 0}.login button{width:100%;margin-top:8px}
-#app{display:none}.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px)}aside{background:#fff;border-right:1px solid #e5e7eb;padding:12px}aside button{width:100%;border:0;background:#fff;text-align:left;margin:3px 0}aside button.active{background:#eaf2ff;color:#0b4fd8}
-main{max-width:1250px;width:100%;margin:auto;padding:22px}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,.panel{background:#fff;border-radius:15px;padding:17px;box-shadow:0 2px 12px #0000000a;margin-bottom:16px}.metric{font-size:28px;font-weight:800;display:block;margin-top:7px}.muted{color:#667085}.form{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.form>*{min-width:0}.wide{grid-column:span 2}textarea{min-height:80px}
-table{width:100%;border-collapse:collapse}th,td{padding:10px 7px;border-bottom:1px solid #eee;text-align:left}.scroll{overflow:auto}.tag{display:inline-block;padding:4px 8px;border-radius:20px;background:#eef2ff;font-size:12px}.low{background:#fff1f0;color:#b42318}.ok{background:#ecfdf3;color:#027a48}.item{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:7px;margin:7px 0}.actions{display:flex;gap:7px;flex-wrap:wrap}
-#toast{display:none;position:fixed;right:18px;bottom:18px;background:#172033;color:#fff;padding:11px 15px;border-radius:9px;z-index:5}
-@media(max-width:850px){.layout{grid-template-columns:1fr}aside{display:flex;overflow:auto;gap:4px}aside button{min-width:max-content;width:auto}.cards{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.wide{grid-column:auto}.item{grid-template-columns:1fr}}
-</style></head><body>
-<div id="login"><div class="login"><h2>🚚 LogiControl V8</h2><p class="muted">Gestão logística integrada</p><input id="email" value="admin@logicontrol.local" placeholder="E-mail"><input id="senha" type="password" value="1234" placeholder="Senha"><button class="primary" onclick="login()">Entrar</button><p id="loginErr" class="muted"></p></div></div>
-<div id="app"><header><div class="brand">🚚 LogiControl V8 Mobile</div><div><span id="who"></span> <button onclick="logout()">Sair</button></div></header><div class="layout">
-<aside><button class="active" onclick="page('dashboard',this)">📊 Dashboard</button><button onclick="page('estoque',this)">📦 Estoque</button><button onclick="page('clientes',this)">👥 Clientes</button><button onclick="page('pedidos',this)">🛒 Pedidos</button><button onclick="page('entregas',this)">🚚 Entregas</button><button onclick="page('frota',this)">🚛 Frota</button><button onclick="page('custos',this)">💰 Custos</button><button id="relBtn" onclick="page('relatorios',this)">📈 Relatórios</button><button id="auditBtn" onclick="page('auditoria',this)">🧾 Auditoria</button><button id="usrBtn" onclick="page('usuarios',this)">👤 Usuários</button></aside>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:#f5f7fb;
+  color:#172033
+}
+header{
+  height:64px;
+  background:#0b4fd8;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px
+}
+.brand{font-weight:800;font-size:20px}
+
+button,input,select,textarea{
+  font:inherit;
+  padding:10px;
+  border:1px solid #d0d5dd;
+  border-radius:8px
+}
+button{cursor:pointer}
+.primary{
+  background:#0b4fd8;
+  color:#fff;
+  border:0
+}
+.danger{
+  background:#b42318;
+  color:#fff;
+  border:0
+}
+
+#login{
+  min-height:100vh;
+  display:grid;
+  place-items:center
+}
+.login{
+  width:min(430px,92%);
+  background:#fff;
+  padding:28px;
+  border-radius:18px;
+  box-shadow:0 8px 35px #0001
+}
+.login input{
+  width:100%;
+  margin:6px 0
+}
+.login button{
+  width:100%;
+  margin-top:8px
+}
+
+#app{display:none}
+
+.layout{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  min-height:calc(100vh - 64px)
+}
+
+aside{
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  padding:12px
+}
+aside button{
+  width:100%;
+  border:0;
+  background:#fff;
+  text-align:left;
+  margin:3px 0
+}
+aside button.active{
+  background:#eaf2ff;
+  color:#0b4fd8
+}
+
+main{
+  max-width:1250px;
+  width:100%;
+  margin:auto;
+  padding:22px
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
+}
+
+.card,.panel{
+  background:#fff;
+  border-radius:15px;
+  padding:17px;
+  box-shadow:0 2px 12px #0000000a;
+  margin-bottom:16px
+}
+
+.metric{
+  font-size:28px;
+  font-weight:800;
+  display:block;
+  margin-top:7px
+}
+
+.muted{color:#667085}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:10px 0
+}
+.form>*{min-width:0}
+.wide{grid-column:span 2}
+
+textarea{min-height:80px}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+th,td{
+  padding:10px 7px;
+  border-bottom:1px solid #eee;
+  text-align:left
+}
+.scroll{overflow:auto}
+
+.tag{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#eef2ff;
+  font-size:12px
+}
+.low{
+  background:#fff1f0;
+  color:#b42318
+}
+.ok{
+  background:#ecfdf3;
+  color:#027a48
+}
+
+.item{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:7px;
+  margin:7px 0
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap
+}
+
+.password-box{
+  max-width:600px
+}
+
+.password-box input{
+  width:100%
+}
+
+.password-message{
+  margin-top:12px;
+  font-weight:600
+}
+
+.success{
+  color:#027a48
+}
+
+.error{
+  color:#b42318
+}
+
+#toast{
+  display:none;
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:#172033;
+  color:#fff;
+  padding:11px 15px;
+  border-radius:9px;
+  z-index:5
+}
+
+@media(max-width:850px){
+  .layout{grid-template-columns:1fr}
+
+  aside{
+    display:flex;
+    overflow:auto;
+    gap:4px
+  }
+
+  aside button{
+    min-width:max-content;
+    width:auto
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr
+  }
+
+  .form{
+    grid-template-columns:1fr
+  }
+
+  .wide{
+    grid-column:auto
+  }
+
+  .item{
+    grid-template-columns:1fr
+  }
+
+  header{
+    padding:0 12px
+  }
+
+  .brand{
+    font-size:16px
+  }
+
+  main{
+    padding:12px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login">
+    <h2>🚚 LogiControl V8</h2>
+    <p class="muted">Gestão logística integrada</p>
+
+    <input
+      id="email"
+      value="admin@logicontrol.local"
+      placeholder="E-mail"
+      autocomplete="username"
+    >
+
+    <input
+      id="senha"
+      type="password"
+      value="1234"
+      placeholder="Senha"
+      autocomplete="current-password"
+    >
+
+    <button class="primary" onclick="login()">
+      Entrar
+    </button>
+
+    <p id="loginErr" class="muted"></p>
+  </div>
+</div>
+
+
+<!-- APLICAÇÃO -->
+<div id="app">
+
+<header>
+  <div class="brand">
+    🚚 LogiControl V8 Mobile
+  </div>
+
+  <div>
+    <span id="who"></span>
+    <button onclick="logout()">Sair</button>
+  </div>
+</header>
+
+
+<div class="layout">
+
+<!-- MENU -->
+<aside>
+
+<button
+  class="active"
+  onclick="page('dashboard',this)"
+>
+📊 Dashboard
+</button>
+
+<button onclick="page('estoque',this)">
+📦 Estoque
+</button>
+
+<button onclick="page('clientes',this)">
+👥 Clientes
+</button>
+
+<button onclick="page('pedidos',this)">
+🛒 Pedidos
+</button>
+
+<button onclick="page('entregas',this)">
+🚚 Entregas
+</button>
+
+<button onclick="page('frota',this)">
+🚛 Frota
+</button>
+
+<button onclick="page('custos',this)">
+💰 Custos
+</button>
+
+<button
+  id="relBtn"
+  onclick="page('relatorios',this)"
+>
+📈 Relatórios
+</button>
+
+<button
+  id="auditBtn"
+  onclick="page('auditoria',this)"
+>
+🧾 Auditoria
+</button>
+
+<button
+  id="usrBtn"
+  onclick="page('usuarios',this)"
+>
+👤 Usuários
+</button>
+
+<!-- NOVO -->
+<button onclick="page('senhaPage',this)">
+🔐 Alterar minha senha
+</button>
+
+</aside>
+
+
 <main>
-<section id="dashboard" class="page active"><h2>Dashboard operacional</h2><div class="cards"><div class="card">Produtos<span id="d1" class="metric">0</span></div><div class="card">Clientes<span id="d2" class="metric">0</span></div><div class="card">Pedidos<span id="d3" class="metric">0</span></div><div class="card">Estoque baixo<span id="d4" class="metric">0</span></div><div class="card">Pedidos em aberto<span id="d5" class="metric">0</span></div><div class="card">Entregas ativas<span id="d6" class="metric">0</span></div><div class="card">Faturamento<span id="d7" class="metric">R$ 0,00</span></div><div class="card">Custos<span id="d8" class="metric">R$ 0,00</span></div></div><div class="panel"><h3>Saúde do sistema</h3><span id="health" class="tag">Verificando...</span></div></section>
 
-<section id="estoque" class="page"><h2>📦 Estoque</h2><div class="panel"><h3>Novo produto</h3><div class="form"><input id="pn" placeholder="Nome"><input id="psku" placeholder="SKU"><input id="pc" placeholder="Categoria"><input id="pq" type="number" min="0" placeholder="Quantidade"></div><div class="form"><input id="pm" type="number" min="0" placeholder="Estoque mínimo"><input id="pp" type="number" min="0" step=".01" placeholder="Preço padrão"><button class="primary" onclick="novoProduto()">Cadastrar</button></div></div><div class="panel scroll"><h3>Produtos</h3><table><thead><tr><th>SKU</th><th>Produto</th><th>Categoria</th><th>Qtd.</th><th>Mínimo</th><th>Preço</th><th>Status</th></tr></thead><tbody id="prod"></tbody></table></div></section>
+<!-- DASHBOARD -->
+<section
+  id="dashboard"
+  class="page active"
+>
 
-<section id="clientes" class="page"><h2>👥 Clientes</h2><div class="panel"><div class="form"><input id="cn" placeholder="Nome/empresa"><input id="cc" placeholder="Cidade"><input id="ce" placeholder="Endereço"><input id="ct" placeholder="Telefone"></div><div class="form"><input id="cem" placeholder="E-mail"><input id="cdoc" placeholder="Documento"><button class="primary" onclick="novoCliente()">Cadastrar cliente</button></div></div><div class="panel scroll"><table><thead><tr><th>ID</th><th>Cliente</th><th>Cidade</th><th>Endereço</th><th>Telefone</th></tr></thead><tbody id="cli"></tbody></table></div></section>
+<h2>Dashboard operacional</h2>
 
-<section id="pedidos" class="page"><h2>🛒 Pedidos</h2><div class="panel"><div class="form"><select id="pcli"></select><select id="pstatus"><option>Pendente</option><option>Em preparação</option><option>Em transporte</option></select><select id="prior"><option>Normal</option><option>Alta</option><option>Urgente</option><input id="obs" placeholder="Observações"></select></div><h4>Itens do pedido</h4><div id="items"></div><div class="actions"><button onclick="addItem()">+ Produto</button><button class="primary" onclick="novoPedido()">Criar pedido</button></div><p class="muted">A criação valida todos os itens e baixa o estoque em uma única transação.</p></div><div class="panel scroll"><table><thead><tr><th>ID</th><th>Cliente</th><th>Prioridade</th><th>Status</th><th>Total</th><th>Ação</th></tr></thead><tbody id="ped"></tbody></table></div></section>
+<div class="cards">
 
-<section id="entregas" class="page"><h2>🚚 Entregas</h2><div class="panel"><div class="form"><select id="eped"></select><select id="emot"></select><select id="evei"></select><input id="eorig" placeholder="Origem"></div><div class="form"><input id="edest" placeholder="Destino"><input id="edata" type="datetime-local"><input id="eobs" placeholder="Observações"><button class="primary" onclick="novaEntrega()">Criar entrega</button></div></div><div class="panel scroll"><table><thead><tr><th>ID</th><th>Pedido</th><th>Cliente</th><th>Motorista</th><th>Veículo</th><th>Status</th><th>Ação</th></tr></thead><tbody id="ent"></tbody></table></div></section>
+<div class="card">
+Produtos
+<span id="d1" class="metric">0</span>
+</div>
 
-<section id="frota" class="page"><h2>🚛 Frota</h2><div class="panel"><h3>Motorista</h3><div class="form"><input id="mn" placeholder="Nome"><input id="mt" placeholder="Telefone"><input id="mc" placeholder="CNH"><button class="primary" onclick="novoMotorista()">Cadastrar</button></div><h3>Veículo</h3><div class="form"><input id="vp" placeholder="Placa"><input id="vm" placeholder="Modelo"><input id="vkg" type="number" min="0" placeholder="Capacidade (kg)"><button class="primary" onclick="novoVeiculo()">Cadastrar</button></div></div><div class="panel scroll"><h3>Motoristas</h3><table><tbody id="mot"></tbody></table><h3>Veículos</h3><table><tbody id="vei"></tbody></table></div></section>
+<div class="card">
+Clientes
+<span id="d2" class="metric">0</span>
+</div>
 
-<section id="custos" class="page"><h2>💰 Custos</h2><div class="panel"><div class="form"><select id="cent"></select><input id="ctipo" placeholder="Tipo"><input id="cdesc" placeholder="Descrição"><input id="cval" type="number" min="0" step=".01" placeholder="Valor"></div><button class="primary" onclick="novoCusto()">Registrar custo</button></div><div class="panel scroll"><table><thead><tr><th>ID</th><th>Entrega</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="cus"></tbody></table></div></section>
+<div class="card">
+Pedidos
+<span id="d3" class="metric">0</span>
+</div>
 
-<section id="relatorios" class="page"><h2>📈 Relatórios</h2><div class="panel"><button class="primary" onclick="loadReports()">Atualizar relatório</button><div id="report" style="margin-top:15px"></div></div></section>
-<section id="auditoria" class="page"><h2>🧾 Auditoria</h2><div class="panel scroll"><table><thead><tr><th>Data</th><th>Usuário</th><th>Ação</th><th>Entidade</th><th>ID</th><th>Detalhes</th></tr></thead><tbody id="audit"></tbody></table></div></section>
-<section id="usuarios" class="page"><h2>👤 Usuários</h2><div class="panel"><div class="form"><input id="un" placeholder="Nome"><input id="ue" placeholder="E-mail"><input id="us" type="password" placeholder="Senha"><select id="ut"><option>operador</option><option>admin</option></select></div><button class="primary" onclick="novoUsuario()">Criar usuário</button></div><div class="panel scroll"><table><thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Tipo</th><th>Ativo</th></tr></thead><tbody id="users"></tbody></table></div></section>
-</main></div></div><div id="toast"></div>
+<div class="card">
+Estoque baixo
+<span id="d4" class="metric">0</span>
+</div>
+
+<div class="card">
+Pedidos em aberto
+<span id="d5" class="metric">0</span>
+</div>
+
+<div class="card">
+Entregas ativas
+<span id="d6" class="metric">0</span>
+</div>
+
+<div class="card">
+Faturamento
+<span id="d7" class="metric">R$ 0,00</span>
+</div>
+
+<div class="card">
+Custos
+<span id="d8" class="metric">R$ 0,00</span>
+</div>
+
+</div>
+
+<div class="panel">
+<h3>Saúde do sistema</h3>
+<span id="health" class="tag">
+Verificando...
+</span>
+</div>
+
+</section>
+
+
+<!-- ESTOQUE -->
+<section id="estoque" class="page">
+
+<h2>📦 Estoque</h2>
+
+<div class="panel">
+
+<h3>Novo produto</h3>
+
+<div class="form">
+
+<input id="pn" placeholder="Nome">
+
+<input id="psku" placeholder="SKU">
+
+<input id="pc" placeholder="Categoria">
+
+<input
+  id="pq"
+  type="number"
+  min="0"
+  placeholder="Quantidade"
+>
+
+</div>
+
+<div class="form">
+
+<input
+  id="pm"
+  type="number"
+  min="0"
+  placeholder="Estoque mínimo"
+>
+
+<input
+  id="pp"
+  type="number"
+  min="0"
+  step=".01"
+  placeholder="Preço padrão"
+>
+
+<button
+  class="primary"
+  onclick="novoProduto()"
+>
+Cadastrar
+</button>
+
+</div>
+
+</div>
+
+<div class="panel scroll">
+
+<h3>Produtos</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>SKU</th>
+<th>Produto</th>
+<th>Categoria</th>
+<th>Qtd.</th>
+<th>Mínimo</th>
+<th>Preço</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="prod"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- CLIENTES -->
+<section id="clientes" class="page">
+
+<h2>👥 Clientes</h2>
+
+<div class="panel">
+
+<div class="form">
+
+<input id="cn" placeholder="Nome/empresa">
+<input id="cc" placeholder="Cidade">
+<input id="ce" placeholder="Endereço">
+<input id="ct" placeholder="Telefone">
+
+</div>
+
+<div class="form">
+
+<input id="cem" placeholder="E-mail">
+<input id="cdoc" placeholder="Documento">
+
+<button
+  class="primary"
+  onclick="novoCliente()"
+>
+Cadastrar cliente
+</button>
+
+</div>
+
+</div>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Cidade</th>
+<th>Endereço</th>
+<th>Telefone</th>
+</tr>
+</thead>
+
+<tbody id="cli"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- PEDIDOS -->
+<section id="pedidos" class="page">
+
+<h2>🛒 Pedidos</h2>
+
+<div class="panel">
+
+<div class="form">
+
+<select id="pcli"></select>
+
+<select id="pstatus">
+<option>Pendente</option>
+<option>Em preparação</option>
+<option>Em transporte</option>
+</select>
+
+<select id="prior">
+<option>Normal</option>
+<option>Alta</option>
+<option>Urgente</option>
+</select>
+
+<input
+  id="obs"
+  placeholder="Observações"
+>
+
+</div>
+
+<h4>Itens do pedido</h4>
+
+<div id="items"></div>
+
+<div class="actions">
+
+<button onclick="addItem()">
++ Produto
+</button>
+
+<button
+  class="primary"
+  onclick="novoPedido()"
+>
+Criar pedido
+</button>
+
+</div>
+
+<p class="muted">
+A criação valida todos os itens e baixa o estoque em uma única transação.
+</p>
+
+</div>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Cliente</th>
+<th>Prioridade</th>
+<th>Status</th>
+<th>Total</th>
+<th>Ação</th>
+</tr>
+</thead>
+
+<tbody id="ped"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ENTREGAS -->
+<section id="entregas" class="page">
+
+<h2>🚚 Entregas</h2>
+
+<div class="panel">
+
+<div class="form">
+
+<select id="eped"></select>
+<select id="emot"></select>
+<select id="evei"></select>
+
+<input
+  id="eorig"
+  placeholder="Origem"
+>
+
+</div>
+
+<div class="form">
+
+<input
+  id="edest"
+  placeholder="Destino"
+>
+
+<input
+  id="edata"
+  type="datetime-local"
+>
+
+<input
+  id="eobs"
+  placeholder="Observações"
+>
+
+<button
+  class="primary"
+  onclick="novaEntrega()"
+>
+Criar entrega
+</button>
+
+</div>
+
+</div>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Pedido</th>
+<th>Cliente</th>
+<th>Motorista</th>
+<th>Veículo</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+</thead>
+
+<tbody id="ent"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- FROTA -->
+<section id="frota" class="page">
+
+<h2>🚛 Frota</h2>
+
+<div class="panel">
+
+<h3>Motorista</h3>
+
+<div class="form">
+
+<input id="mn" placeholder="Nome">
+<input id="mt" placeholder="Telefone">
+<input id="mc" placeholder="CNH">
+
+<button
+  class="primary"
+  onclick="novoMotorista()"
+>
+Cadastrar
+</button>
+
+</div>
+
+<h3>Veículo</h3>
+
+<div class="form">
+
+<input id="vp" placeholder="Placa">
+<input id="vm" placeholder="Modelo">
+
+<input
+  id="vkg"
+  type="number"
+  min="0"
+  placeholder="Capacidade (kg)"
+>
+
+<button
+  class="primary"
+  onclick="novoVeiculo()"
+>
+Cadastrar
+</button>
+
+</div>
+
+</div>
+
+<div class="panel scroll">
+
+<h3>Motoristas</h3>
+
+<table>
+<tbody id="mot"></tbody>
+</table>
+
+<h3>Veículos</h3>
+
+<table>
+<tbody id="vei"></tbody>
+</table>
+
+</div>
+
+</section>
+
+
+<!-- CUSTOS -->
+<section id="custos" class="page">
+
+<h2>💰 Custos</h2>
+
+<div class="panel">
+
+<div class="form">
+
+<select id="cent"></select>
+
+<input
+  id="ctipo"
+  placeholder="Tipo"
+>
+
+<input
+  id="cdesc"
+  placeholder="Descrição"
+>
+
+<input
+  id="cval"
+  type="number"
+  min="0"
+  step=".01"
+  placeholder="Valor"
+>
+
+</div>
+
+<button
+  class="primary"
+  onclick="novoCusto()"
+>
+Registrar custo
+</button>
+
+</div>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Entrega</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Valor</th>
+</tr>
+</thead>
+
+<tbody id="cus"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- RELATÓRIOS -->
+<section id="relatorios" class="page">
+
+<h2>📈 Relatórios</h2>
+
+<div class="panel">
+
+<button
+  class="primary"
+  onclick="loadReports()"
+>
+Atualizar relatório
+</button>
+
+<div
+  id="report"
+  style="margin-top:15px"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- AUDITORIA -->
+<section id="auditoria" class="page">
+
+<h2>🧾 Auditoria</h2>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>Data</th>
+<th>Usuário</th>
+<th>Ação</th>
+<th>Entidade</th>
+<th>ID</th>
+<th>Detalhes</th>
+</tr>
+</thead>
+
+<tbody id="audit"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- USUÁRIOS -->
+<section id="usuarios" class="page">
+
+<h2>👤 Usuários</h2>
+
+<div class="panel">
+
+<div class="form">
+
+<input
+  id="un"
+  placeholder="Nome"
+>
+
+<input
+  id="ue"
+  placeholder="E-mail"
+>
+
+<input
+  id="us"
+  type="password"
+  placeholder="Senha"
+>
+
+<select id="ut">
+<option>operador</option>
+<option>admin</option>
+</select>
+
+</div>
+
+<button
+  class="primary"
+  onclick="novoUsuario()"
+>
+Criar usuário
+</button>
+
+</div>
+
+<div class="panel scroll">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>E-mail</th>
+<th>Tipo</th>
+<th>Ativo</th>
+</tr>
+</thead>
+
+<tbody id="users"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ALTERAR SENHA -->
+<section
+  id="senhaPage"
+  class="page"
+>
+
+<h2>🔐 Alterar minha senha</h2>
+
+<div class="panel password-box">
+
+<h3>Segurança da conta</h3>
+
+<p class="muted">
+Digite sua senha atual e escolha uma nova senha.
+</p>
+
+<div class="form">
+
+<input
+  id="senhaAtual"
+  type="password"
+  placeholder="Senha atual"
+  autocomplete="current-password"
+>
+
+<input
+  id="novaSenha"
+  type="password"
+  placeholder="Nova senha"
+  autocomplete="new-password"
+>
+
+<input
+  id="confirmaSenha"
+  type="password"
+  placeholder="Confirmar nova senha"
+  autocomplete="new-password"
+>
+
+</div>
+
+<div class="actions">
+
+<button
+  class="primary"
+  onclick="alterarSenha()"
+>
+🔐 Alterar senha
+</button>
+
+<button
+  onclick="limparSenha()"
+>
+Limpar
+</button>
+
+</div>
+
+<p
+  id="senhaMsg"
+  class="password-message"
+></p>
+
+</div>
+
+</section>
+
+</main>
+</div>
+</div>
+
+<div id="toast"></div>
+
+
 <script>
-const API=window.location.origin;let token=localStorage.getItem("lc_v8_token"),me=null,db={};
+
+const API=window.location.origin;
+
+let token=localStorage.getItem("lc_v8_token");
+let me=null;
+let db={};
+
+
 const $=id=>document.getElementById(id);
-function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-function toast(t,b=false){const x=$("toast");x.textContent=t;x.style.display="block";x.style.background=b?"#b42318":"#172033";setTimeout(()=>x.style.display="none",2800)}
-async function api(path,opt={}){const h={"Content-Type":"application/json"};if(token)h.Authorization="Bearer "+token;const r=await fetch(API+path,{...opt,headers:{...h,...(opt.headers||{})}});if(r.status===401){logout();throw Error("Sessão expirada.")}if(!r.ok){let e={};try{e=await r.json()}catch{};throw Error(e.erro||"Erro HTTP "+r.status)}return r.json()}
-async function login(){try{const r=await api("/auth/login",{method:"POST",body:JSON.stringify({email:$("email").value,senha:$("senha").value})});token=r.token;me=r.usuario;localStorage.setItem("lc_v8_token",token);start()}catch(e){$("loginErr").textContent=e.message}}
-function start(){ $("login").style.display="none";$("app").style.display="block";$("who").textContent=me?me.nome:"";$("usrBtn").style.display=me?.tipo==="admin"?"block":"none";$("auditBtn").style.display=me?.tipo==="admin"?"block":"none";loadAll()}
-function logout(){token=null;me=null;localStorage.removeItem("lc_v8_token");$("app").style.display="none";$("login").style.display="grid"}
-function page(id,b){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll("aside button").forEach(x=>x.classList.remove("active"));b.classList.add("active");loadAll()}
-async function loadAll(){try{const [dash,prod,cli,ped,mot,vei,ent,cus]=await Promise.all([api("/dashboard"),api("/produtos"),api("/clientes"),api("/pedidos"),api("/motoristas"),api("/veiculos"),api("/entregas"),api("/custos")]);db={dash,prod,cli,ped,mot,vei,ent,cus};render();$("health").textContent="API + SQLite online";$("health").className="tag ok";if(me?.tipo==="admin")loadAdmin()}catch(e){$("health").textContent="Falha: "+e.message;$("health").className="tag low"}}
-function render(){const d=db.dash;$("d1").textContent=d.produtos;$("d2").textContent=d.clientes;$("d3").textContent=d.pedidos;$("d4").textContent=d.estoque_baixo;$("d5").textContent=d.pendentes;$("d6").textContent=d.entregas_ativas;$("d7").textContent=money(d.valor_pedidos);$("d8").textContent=money(d.custos);
-$("prod").innerHTML=db.prod.map(p=>`<tr><td>${p.sku||"-"}</td><td>${p.nome}</td><td>${p.categoria}</td><td>${p.quantidade}</td><td>${p.estoque_minimo}</td><td>${money(p.preco_padrao)}</td><td><span class="tag ${p.estoque_baixo?"low":"ok"}">${p.estoque_baixo?"Baixo":"OK"}</span></td></tr>`).join("");
-$("cli").innerHTML=db.cli.map(c=>`<tr><td>${c.id}</td><td>${c.nome}</td><td>${c.cidade}</td><td>${c.endereco}</td><td>${c.telefone||"-"}</td></tr>`).join("");
-$("pcli").innerHTML=db.cli.map(c=>`<option value="${c.id}">${c.nome}</option>`).join("");
-$("ped").innerHTML=db.ped.map(p=>`<tr><td>#${p.id}</td><td>${p.cliente_nome}</td><td>${p.prioridade}</td><td>${p.status}</td><td>${money(p.valor_total)}</td><td><button onclick="avancarPedido(${p.id},'Em preparação')">Preparar</button> <button onclick="avancarPedido(${p.id},'Em transporte')">Transportar</button></td></tr>`).join("");
-$("eped").innerHTML=db.ped.filter(p=>p.status!=="Cancelado").map(p=>`<option value="${p.id}">#${p.id} - ${p.cliente_nome}</option>`).join("");
-$("emot").innerHTML='<option value="">Sem motorista</option>'+db.mot.map(x=>`<option value="${x.id}">${x.nome}</option>`).join("");
-$("evei").innerHTML='<option value="">Sem veículo</option>'+db.vei.map(x=>`<option value="${x.id}">${x.placa} - ${x.modelo}</option>`).join("");
-$("ent").innerHTML=db.ent.map(e=>`<tr><td>#${e.id}</td><td>#${e.pedido_id}</td><td>${e.cliente_nome}</td><td>${e.motorista_nome||"-"}</td><td>${e.veiculo_placa||"-"}</td><td>${e.status}</td><td><button onclick="statusEnt(${e.id},'Em transporte')">Saiu</button> <button onclick="statusEnt(${e.id},'Concluída')">Concluir</button></td></tr>`).join("");
-$("mot").innerHTML=db.mot.map(x=>`<tr><td>#${x.id}</td><td>${x.nome}</td><td>${x.telefone||"-"}</td><td>${x.status}</td></tr>`).join("");
-$("vei").innerHTML=db.vei.map(x=>`<tr><td>#${x.id}</td><td>${x.placa}</td><td>${x.modelo}</td><td>${x.capacidade_kg||0} kg</td><td>${x.status}</td></tr>`).join("");
-$("cent").innerHTML='<option value="">Sem entrega</option>'+db.ent.map(x=>`<option value="${x.id}">Entrega #${x.id}</option>`).join("");
-$("cus").innerHTML=db.cus.map(x=>`<tr><td>${x.id}</td><td>${x.entrega_id||"-"}</td><td>${x.tipo}</td><td>${x.descricao||"-"}</td><td>${money(x.valor)}</td></tr>`).join("")}
-function addItem(){const x=document.createElement("div");x.className="item";x.innerHTML=`<select class="ip">${db.prod.map(p=>`<option value="${p.id}">${p.nome} — estoque ${p.quantidade}</option>`).join("")}</select><input class="iq" type="number" min="1" value="1"><input class="iv" type="number" min="0" step=".01" placeholder="Preço (vazio = padrão)"><button onclick="this.parentElement.remove()">Remover</button>`;$("items").appendChild(x)}
-async function novoProduto(){try{await api("/produtos",{method:"POST",body:JSON.stringify({nome:$("pn").value,sku:$("psku").value||null,categoria:$("pc").value,quantidade:+$("pq").value,estoque_minimo:+$("pm").value,preco_padrao:+$("pp").value||0})});toast("Produto cadastrado.");loadAll()}catch(e){toast(e.message,true)}}
-async function novoCliente(){try{await api("/clientes",{method:"POST",body:JSON.stringify({nome:$("cn").value,cidade:$("cc").value,endereco:$("ce").value,telefone:$("ct").value,email:$("cem").value,documento:$("cdoc").value})});toast("Cliente cadastrado.");loadAll()}catch(e){toast(e.message,true)}}
-async function novoPedido(){try{const itens=[...document.querySelectorAll(".item")].map(x=>({produto_id:+x.querySelector(".ip").value,quantidade:+x.querySelector(".iq").value,preco_unitario:x.querySelector(".iv").value}));if(!itens.length)return toast("Adicione um produto.",true);await api("/pedidos",{method:"POST",body:JSON.stringify({cliente_id:+$("pcli").value,status:$("pstatus").value,prioridade:$("prior").value,observacoes:$("obs").value,itens})});$("items").innerHTML="";toast("Pedido criado; estoque baixado.");loadAll()}catch(e){toast(e.message,true)}}
-async function avancarPedido(id,status){try{await api("/pedidos/"+id+"/status",{method:"PATCH",body:JSON.stringify({status})});toast("Status atualizado.");loadAll()}catch(e){toast(e.message,true)}}
-async function novaEntrega(){try{await api("/entregas",{method:"POST",body:JSON.stringify({pedido_id:+$("eped").value,motorista_id:$("emot").value||null,veiculo_id:$("evei").value||null,origem:$("eorig").value,destino:$("edest").value,data_prevista:$("edata").value,observacoes:$("eobs").value})});toast("Entrega criada.");loadAll()}catch(e){toast(e.message,true)}}
-async function statusEnt(id,status){try{await api("/entregas/"+id+"/status",{method:"PATCH",body:JSON.stringify({status})});toast("Entrega atualizada.");loadAll()}catch(e){toast(e.message,true)}}
-async function novoMotorista(){try{await api("/motoristas",{method:"POST",body:JSON.stringify({nome:$("mn").value,telefone:$("mt").value,cnh:$("mc").value})});toast("Motorista salvo.");loadAll()}catch(e){toast(e.message,true)}}
-async function novoVeiculo(){try{await api("/veiculos",{method:"POST",body:JSON.stringify({placa:$("vp").value,modelo:$("vm").value,capacidade_kg:+$("vkg").value||0})});toast("Veículo salvo.");loadAll()}catch(e){toast(e.message,true)}}
-async function novoCusto(){try{await api("/custos",{method:"POST",body:JSON.stringify({entrega_id:$("cent").value||null,tipo:$("ctipo").value,descricao:$("cdesc").value,valor:+$("cval").value})});toast("Custo registrado.");loadAll()}catch(e){toast(e.message,true)}}
-async function loadReports(){try{const r=await api("/relatorios/resumo");$("report").innerHTML=`<h3>Resumo</h3><p>Custos: <b>${money(r.custos_total)}</b> · Ticket médio: <b>${money(r.ticket_medio)}</b></p><h4>Pedidos por status</h4><table><tbody>${r.pedidos.map(x=>`<tr><td>${x.status}</td><td>${x.quantidade}</td><td>${money(x.valor)}</td></tr>`).join("")}</tbody></table><h4>Estoque crítico</h4><table><tbody>${r.estoque_baixo.map(x=>`<tr><td>${x.nome}</td><td>${x.quantidade}</td><td>mínimo ${x.estoque_minimo}</td></tr>`).join("")||"<tr><td>Nenhum produto crítico.</td></tr>"}</tbody></table>`}catch(e){toast(e.message,true)}}
-async function loadAdmin(){try{const [u,a]=await Promise.all([api("/usuarios"),api("/auditoria")]);$("users").innerHTML=u.map(x=>`<tr><td>${x.id}</td><td>${x.nome}</td><td>${x.email}</td><td>${x.tipo}</td><td>${x.ativo?"Sim":"Não"}</td></tr>`).join("");$("audit").innerHTML=a.map(x=>`<tr><td>${x.criado_em}</td><td>${x.usuario_nome||"-"}</td><td>${x.acao}</td><td>${x.entidade||"-"}</td><td>${x.entidade_id||"-"}</td><td>${x.detalhes||""}</td></tr>`).join("")}catch{}}
-async function novoUsuario(){try{await api("/usuarios",{method:"POST",body:JSON.stringify({nome:$("un").value,email:$("ue").value,senha:$("us").value,tipo:$("ut").value})});toast("Usuário criado.");loadAdmin()}catch(e){toast(e.message,true)}}
-if(token){api("/dashboard").then(()=>start()).catch(()=>logout())}
-</script></body></html>
+
+
+function money(v){
+  return Number(v||0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  )
+}
+
+
+function toast(t,b=false){
+
+  const x=$("toast");
+
+  x.textContent=t;
+
+  x.style.display="block";
+
+  x.style.background=
+    b ? "#b42318" : "#172033";
+
+  setTimeout(
+    ()=>x.style.display="none",
+    2800
+  );
+}
+
+
+async function api(path,opt={}){
+
+  const h={
+    "Content-Type":
+      "application/json"
+  };
+
+  if(token){
+    h.Authorization=
+      "Bearer "+token;
+  }
+
+  const r=
+    await fetch(
+      API+path,
+      {
+        ...opt,
+        headers:{
+          ...h,
+          ...(opt.headers||{})
+        }
+      }
+    );
+
+  if(r.status===401){
+    logout();
+    throw Error(
+      "Sessão expirada."
+    );
+  }
+
+  if(!r.ok){
+
+    let e={};
+
+    try{
+      e=await r.json();
+    }catch{}
+
+    throw Error(
+      e.erro ||
+      "Erro HTTP "+r.status
+    );
+  }
+
+  return r.json();
+}
+
+
+async function login(){
+
+  try{
+
+    const r=
+      await api(
+        "/auth/login",
+        {
+          method:"POST",
+          body:JSON.stringify({
+            email:$("email").value,
+            senha:$("senha").value
+          })
+        }
+      );
+
+    token=r.token;
+    me=r.usuario;
+
+    localStorage.setItem(
+      "lc_v8_token",
+      token
+    );
+
+    start();
+
+  }catch(e){
+
+    $("loginErr").textContent=
+      e.message;
+  }
+}
+
+
+function start(){
+
+  $("login").style.display="none";
+
+  $("app").style.display="block";
+
+  $("who").textContent=
+    me ? me.nome : "";
+
+  $("usrBtn").style.display=
+    me?.tipo==="admin"
+      ? "block"
+      : "none";
+
+  $("auditBtn").style.display=
+    me?.tipo==="admin"
+      ? "block"
+      : "none";
+
+  loadAll();
+}
+
+
+function logout(){
+
+  token=null;
+  me=null;
+
+  localStorage.removeItem(
+    "lc_v8_token"
+  );
+
+  $("app").style.display="none";
+
+  $("login").style.display="grid";
+}
+
+
+function page(id,b){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      x=>x.classList.remove("active")
+    );
+
+  $(id).classList.add("active");
+
+  document
+    .querySelectorAll("aside button")
+    .forEach(
+      x=>x.classList.remove("active")
+    );
+
+  b.classList.add("active");
+
+  if(id==="relatorios"){
+    loadReports();
+  }
+
+  loadAll();
+}
+
+
+async function loadAll(){
+
+  try{
+
+    const [
+      dash,
+      prod,
+      cli,
+      ped,
+      mot,
+      vei,
+      ent,
+      cus
+    ]=
+      await Promise.all([
+
+        api("/dashboard"),
+        api("/produtos"),
+        api("/clientes"),
+        api("/pedidos"),
+        api("/motoristas"),
+        api("/veiculos"),
+        api("/entregas"),
+        api("/custos")
+
+      ]);
+
+    db={
+      dash,
+      prod,
+      cli,
+      ped,
+      mot,
+      vei,
+      ent,
+      cus
+    };
+
+    render();
+
+    $("health").textContent=
+      "API + SQLite online";
+
+    $("health").className=
+      "tag ok";
+
+    if(me?.tipo==="admin"){
+      loadAdmin();
+    }
+
+  }catch(e){
+
+    $("health").textContent=
+      "Falha: "+e.message;
+
+    $("health").className=
+      "tag low";
+  }
+}
+
+
+function render(){
+
+  const d=db.dash;
+
+  $("d1").textContent=d.produtos;
+  $("d2").textContent=d.clientes;
+  $("d3").textContent=d.pedidos;
+  $("d4").textContent=d.estoque_baixo;
+  $("d5").textContent=d.pendentes;
+  $("d6").textContent=d.entregas_ativas;
+  $("d7").textContent=
+    money(d.valor_pedidos);
+  $("d8").textContent=
+    money(d.custos);
+
+
+  $("prod").innerHTML=
+    db.prod.map(
+      p=>`
+      <tr>
+        <td>${p.sku||"-"}</td>
+        <td>${p.nome}</td>
+        <td>${p.categoria}</td>
+        <td>${p.quantidade}</td>
+        <td>${p.estoque_minimo}</td>
+        <td>${money(p.preco_padrao)}</td>
+        <td>
+          <span class="tag ${
+            p.estoque_baixo
+              ?"low"
+              :"ok"
+          }">
+          ${
+            p.estoque_baixo
+              ?"Baixo"
+              :"OK"
+          }
+          </span>
+        </td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("cli").innerHTML=
+    db.cli.map(
+      c=>`
+      <tr>
+        <td>${c.id}</td>
+        <td>${c.nome}</td>
+        <td>${c.cidade}</td>
+        <td>${c.endereco}</td>
+        <td>${c.telefone||"-"}</td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("pcli").innerHTML=
+    db.cli.map(
+      c=>`
+      <option value="${c.id}">
+        ${c.nome}
+      </option>
+      `
+    ).join("");
+
+
+  $("ped").innerHTML=
+    db.ped.map(
+      p=>`
+      <tr>
+        <td>#${p.id}</td>
+        <td>${p.cliente_nome}</td>
+        <td>${p.prioridade}</td>
+        <td>${p.status}</td>
+        <td>${money(p.valor_total)}</td>
+        <td>
+          <button
+            onclick="avancarPedido(
+              ${p.id},
+              'Em preparação'
+            )"
+          >
+          Preparar
+          </button>
+
+          <button
+            onclick="avancarPedido(
+              ${p.id},
+              'Em transporte'
+            )"
+          >
+          Transportar
+          </button>
+        </td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("eped").innerHTML=
+    db.ped
+      .filter(
+        p=>p.status!=="Cancelado"
+      )
+      .map(
+        p=>`
+        <option value="${p.id}">
+          #${p.id} - ${p.cliente_nome}
+        </option>
+        `
+      ).join("");
+
+
+  $("emot").innerHTML=
+    '<option value="">Sem motorista</option>'+
+    db.mot.map(
+      x=>`
+      <option value="${x.id}">
+        ${x.nome}
+      </option>
+      `
+    ).join("");
+
+
+  $("evei").innerHTML=
+    '<option value="">Sem veículo</option>'+
+    db.vei.map(
+      x=>`
+      <option value="${x.id}">
+        ${x.placa} - ${x.modelo}
+      </option>
+      `
+    ).join("");
+
+
+  $("ent").innerHTML=
+    db.ent.map(
+      e=>`
+      <tr>
+        <td>#${e.id}</td>
+        <td>#${e.pedido_id}</td>
+        <td>${e.cliente_nome}</td>
+        <td>${e.motorista_nome||"-"}</td>
+        <td>${e.veiculo_placa||"-"}</td>
+        <td>${e.status}</td>
+        <td>
+          <button
+            onclick="statusEnt(
+              ${e.id},
+              'Em transporte'
+            )"
+          >
+          Saiu
+          </button>
+
+          <button
+            onclick="statusEnt(
+              ${e.id},
+              'Concluída'
+            )"
+          >
+          Concluir
+          </button>
+        </td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("mot").innerHTML=
+    db.mot.map(
+      x=>`
+      <tr>
+        <td>#${x.id}</td>
+        <td>${x.nome}</td>
+        <td>${x.telefone||"-"}</td>
+        <td>${x.status}</td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("vei").innerHTML=
+    db.vei.map(
+      x=>`
+      <tr>
+        <td>#${x.id}</td>
+        <td>${x.placa}</td>
+        <td>${x.modelo}</td>
+        <td>${x.capacidade_kg||0} kg</td>
+        <td>${x.status}</td>
+      </tr>
+      `
+    ).join("");
+
+
+  $("cent").innerHTML=
+    '<option value="">Sem entrega</option>'+
+    db.ent.map(
+      x=>`
+      <option value="${x.id}">
+        Entrega #${x.id}
+      </option>
+      `
+    ).join("");
+
+
+  $("cus").innerHTML=
+    db.cus.map(
+      x=>`
+      <tr>
+        <td>${x.id}</td>
+        <td>${x.entrega_id||"-"}</td>
+        <td>${x.tipo}</td>
+        <td>${x.descricao||"-"}</td>
+        <td>${money(x.valor)}</td>
+      </tr>
+      `
+    ).join("");
+}
+
+
+function addItem(){
+
+  const x=
+    document.createElement("div");
+
+  x.className="item";
+
+  x.innerHTML=`
+    <select class="ip">
+      ${
+        db.prod.map(
+          p=>`
+          <option value="${p.id}">
+            ${p.nome} — estoque ${p.quantidade}
+          </option>
+          `
+        ).join("")
+      }
+    </select>
+
+    <input
+      class="iq"
+      type="number"
+      min="1"
+      value="1"
+    >
+
+    <input
+      class="iv"
+      type="number"
+      min="0"
+      step=".01"
+      placeholder="Preço (vazio = padrão)"
+    >
+
+    <button
+      onclick="this.parentElement.remove()"
+    >
+      Remover
+    </button>
+  `;
+
+  $("items").appendChild(x);
+}
+
+
+async function novoProduto(){
+
+  try{
+
+    await api(
+      "/produtos",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          nome:$("pn").value,
+          sku:$("psku").value||null,
+          categoria:$("pc").value,
+          quantidade:+$("pq").value,
+          estoque_minimo:+$("pm").value,
+          preco_padrao:
+            +$("pp").value||0
+
+        })
+      }
+    );
+
+    toast(
+      "Produto cadastrado."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novoCliente(){
+
+  try{
+
+    await api(
+      "/clientes",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          nome:$("cn").value,
+          cidade:$("cc").value,
+          endereco:$("ce").value,
+          telefone:$("ct").value,
+          email:$("cem").value,
+          documento:$("cdoc").value
+
+        })
+      }
+    );
+
+    toast(
+      "Cliente cadastrado."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novoPedido(){
+
+  try{
+
+    const itens=
+      [
+        ...document.querySelectorAll(
+          ".item"
+        )
+      ].map(
+        x=>({
+
+          produto_id:
+            +x.querySelector(
+              ".ip"
+            ).value,
+
+          quantidade:
+            +x.querySelector(
+              ".iq"
+            ).value,
+
+          preco_unitario:
+            x.querySelector(
+              ".iv"
+            ).value
+
+        })
+      );
+
+    if(!itens.length){
+
+      return toast(
+        "Adicione um produto.",
+        true
+      );
+    }
+
+    await api(
+      "/pedidos",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          cliente_id:
+            +$("pcli").value,
+
+          status:
+            $("pstatus").value,
+
+          prioridade:
+            $("prior").value,
+
+          observacoes:
+            $("obs").value,
+
+          itens
+
+        })
+      }
+    );
+
+    $("items").innerHTML="";
+
+    toast(
+      "Pedido criado; estoque baixado."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function avancarPedido(
+  id,
+  status
+){
+
+  try{
+
+    await api(
+      "/pedidos/"+id+"/status",
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          status
+        })
+      }
+    );
+
+    toast(
+      "Status atualizado."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novaEntrega(){
+
+  try{
+
+    await api(
+      "/entregas",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          pedido_id:
+            +$("eped").value,
+
+          motorista_id:
+            $("emot").value||null,
+
+          veiculo_id:
+            $("evei").value||null,
+
+          origem:
+            $("eorig").value,
+
+          destino:
+            $("edest").value,
+
+          data_prevista:
+            $("edata").value,
+
+          observacoes:
+            $("eobs").value
+
+        })
+      }
+    );
+
+    toast(
+      "Entrega criada."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function statusEnt(
+  id,
+  status
+){
+
+  try{
+
+    await api(
+      "/entregas/"+id+"/status",
+      {
+        method:"PATCH",
+        body:JSON.stringify({
+          status
+        })
+      }
+    );
+
+    toast(
+      "Entrega atualizada."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novoMotorista(){
+
+  try{
+
+    await api(
+      "/motoristas",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          nome:$("mn").value,
+          telefone:$("mt").value,
+          cnh:$("mc").value
+
+        })
+      }
+    );
+
+    toast(
+      "Motorista salvo."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novoVeiculo(){
+
+  try{
+
+    await api(
+      "/veiculos",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          placa:
+            $("vp").value,
+
+          modelo:
+            $("vm").value,
+
+          capacidade_kg:
+            +$("vkg").value||0
+
+        })
+      }
+    );
+
+    toast(
+      "Veículo salvo."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function novoCusto(){
+
+  try{
+
+    await api(
+      "/custos",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          entrega_id:
+            $("cent").value||null,
+
+          tipo:
+            $("ctipo").value,
+
+          descricao:
+            $("cdesc").value,
+
+          valor:
+            +$("cval").value
+
+        })
+      }
+    );
+
+    toast(
+      "Custo registrado."
+    );
+
+    loadAll();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function loadReports(){
+
+  try{
+
+    const r=
+      await api(
+        "/relatorios/resumo"
+      );
+
+    $("report").innerHTML=`
+
+      <h3>Resumo</h3>
+
+      <p>
+        Custos:
+        <b>${money(r.custos_total)}</b>
+        ·
+        Ticket médio:
+        <b>${money(r.ticket_medio)}</b>
+      </p>
+
+      <h4>
+        Pedidos por status
+      </h4>
+
+      <table>
+        <tbody>
+
+          ${
+            r.pedidos.map(
+              x=>`
+              <tr>
+                <td>${x.status}</td>
+                <td>${x.quantidade}</td>
+                <td>${money(x.valor)}</td>
+              </tr>
+              `
+            ).join("")
+          }
+
+        </tbody>
+      </table>
+
+      <h4>
+        Estoque crítico
+      </h4>
+
+      <table>
+        <tbody>
+
+          ${
+            r.estoque_baixo.map(
+              x=>`
+              <tr>
+                <td>${x.nome}</td>
+                <td>${x.quantidade}</td>
+                <td>
+                  mínimo
+                  ${x.estoque_minimo}
+                </td>
+              </tr>
+              `
+            ).join("")
+            ||
+            `
+            <tr>
+              <td>
+                Nenhum produto crítico.
+              </td>
+            </tr>
+            `
+          }
+
+        </tbody>
+      </table>
+    `;
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+async function loadAdmin(){
+
+  try{
+
+    const [u,a]=
+      await Promise.all([
+        api("/usuarios"),
+        api("/auditoria")
+      ]);
+
+
+    $("users").innerHTML=
+      u.map(
+        x=>`
+        <tr>
+          <td>${x.id}</td>
+          <td>${x.nome}</td>
+          <td>${x.email}</td>
+          <td>${x.tipo}</td>
+          <td>
+            ${x.ativo?"Sim":"Não"}
+          </td>
+        </tr>
+        `
+      ).join("");
+
+
+    $("audit").innerHTML=
+      a.map(
+        x=>`
+        <tr>
+          <td>${x.criado_em}</td>
+          <td>${x.usuario_nome||"-"}</td>
+          <td>${x.acao}</td>
+          <td>${x.entidade||"-"}</td>
+          <td>${x.entidade_id||"-"}</td>
+          <td>${x.detalhes||""}</td>
+        </tr>
+        `
+      ).join("");
+
+  }catch(e){}
+}
+
+
+async function novoUsuario(){
+
+  try{
+
+    await api(
+      "/usuarios",
+      {
+        method:"POST",
+        body:JSON.stringify({
+
+          nome:$("un").value,
+
+          email:
+            $("ue").value,
+
+          senha:
+            $("us").value,
+
+          tipo:
+            $("ut").value
+
+        })
+      }
+    );
+
+    toast(
+      "Usuário criado."
+    );
+
+    loadAdmin();
+
+  }catch(e){
+
+    toast(
+      e.message,
+      true
+    );
+  }
+}
+
+
+/* =====================================================
+   ALTERAÇÃO DE SENHA
+   ===================================================== */
+
+async function alterarSenha(){
+
+  const senhaAtual=
+    $("senhaAtual").value;
+
+  const novaSenha=
+    $("novaSenha").value;
+
+  const confirmaSenha=
+    $("confirmaSenha").value;
+
+
+  $("senhaMsg").textContent="";
+  $("senhaMsg").className=
+    "password-message";
+
+
+  if(
+    !senhaAtual ||
+    !novaSenha ||
+    !confirmaSenha
+  ){
+
+    mostrarSenhaErro(
+      "Preencha todos os campos."
+    );
+
+    return;
+  }
+
+
+  if(novaSenha.length<4){
+
+    mostrarSenhaErro(
+      "A nova senha deve ter pelo menos 4 caracteres."
+    );
+
+    return;
+  }
+
+
+  if(novaSenha!==confirmaSenha){
+
+    mostrarSenhaErro(
+      "A confirmação da nova senha não confere."
+    );
+
+    return;
+  }
+
+
+  if(senhaAtual===novaSenha){
+
+    mostrarSenhaErro(
+      "A nova senha deve ser diferente da senha atual."
+    );
+
+    return;
+  }
+
+
+  try{
+
+    await api(
+      "/auth/change-password",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+
+          senhaAtual:
+            senhaAtual,
+
+          novaSenha:
+            novaSenha
+
+        })
+      }
+    );
+
+
+    $("senhaMsg").textContent=
+      "Senha alterada com sucesso!";
+
+    $("senhaMsg").className=
+      "password-message success";
+
+
+    $("senhaAtual").value="";
+    $("novaSenha").value="";
+    $("confirmaSenha").value="";
+
+
+    toast(
+      "Senha alterada com sucesso."
+    );
+
+
+  }catch(e){
+
+    mostrarSenhaErro(
+      e.message
+    );
+
+  }
+}
+
+
+function mostrarSenhaErro(
+  mensagem
+){
+
+  $("senhaMsg").textContent=
+    mensagem;
+
+  $("senhaMsg").className=
+    "password-message error";
+
+  toast(
+    mensagem,
+    true
+  );
+}
+
+
+function limparSenha(){
+
+  $("senhaAtual").value="";
+  $("novaSenha").value="";
+  $("confirmaSenha").value="";
+
+  $("senhaMsg").textContent="";
+  $("senhaMsg").className=
+    "password-message";
+}
+
+
+/* =====================================================
+   INICIALIZAÇÃO
+   ===================================================== */
+
+if(token){
+
+  api("/dashboard")
+    .then(
+      ()=>start()
+    )
+    .catch(
+      ()=>logout()
+    );
+
+}
+
+</script>
+
+</body>
+</html>
