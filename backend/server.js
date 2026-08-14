@@ -77,7 +77,7 @@ db.serialize(async()=>{
   const u=await get("SELECT COUNT(*) n FROM usuarios");
   if(u.n===0) await run("INSERT INTO usuarios(nome,email,senha_hash,tipo) VALUES(?,?,?,?)",
     ["Administrador","admin@logicontrol.local",bcrypt.hashSync("1234",10),"admin"]);
-}).catch(e=>console.error("DB init:",e));
+.catch(e=>console.error("DB init:",e));
 
 function auth(req,res,next){
   const h=req.headers.authorization||"",t=h.startsWith("Bearer ")?h.slice(7):null;
